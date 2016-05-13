@@ -4,7 +4,7 @@
 		c = canvas.getContext('2d'),
 		gravity = 0.1,
 		dampening = 0.99,
-		pullStrength = 0.001,
+		pullStrength = 0.005,
 		offset = 200,
 		circles = [],
 		numCircles = 10,
@@ -79,6 +79,8 @@
 		c.fillStyle = 'rgba(255,255,255, 0.2)';
 		c.fillRect(0, 0, canvas.width, canvas.height);
 
+		executeInteraction();
+
 		requestAnimationFrame(executeFrame);
 	}
 
@@ -98,17 +100,33 @@
 		}
 	}
 
-	canvas.addEventListener('mousemove', function(event){
-		var dx, dy, i, circle;
-
-		for(i = 0; i < numCircles; i++) {
-			circle = circles[i];
-			dx = (event.pageX - 10) - circle.x,
-			dy = (event.pageY - 10) - circle.y;
-			circle.vx += dx * pullStrength;
-			circle.vy += dy * pullStrength;
-		}
+	var mouseDown = false,
+		mouseX, mouseY;
+	canvas.addEventListener('mousedown', function(event){
+		mouseDown = true;
+		mouseX = event.pageX;
+		mouseY = event.pageY;
 	});
+	canvas.addEventListener('mouseup', function(event){
+		mouseDown = false;
+	});
+	canvas.addEventListener('mousemove', function(event){
+		mouseX = event.pageX;
+		mouseY = event.pageY;
+	});
+	function executeInteraction(){
+		if(mouseDown){
+			var dx, dy, i, circle;
+
+			for(i = 0; i < numCircles; i++) {
+				circle = circles[i];
+				dx = mouseX - circle.x,
+				dy = mouseY - circle.y;
+				circle.vx += dx * pullStrength;
+				circle.vy += dy * pullStrength;
+			}
+		}
+	};
 
 	// Start animation
 	executeFrame();
