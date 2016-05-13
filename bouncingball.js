@@ -1,21 +1,29 @@
-var canvas = document.getElementById("ball");
-c = canvas.getContext('2d');
+(function(){
 
-var x = 50,
-	y = 50,
-	radius = 20;
+	var canvas = document.getElementById("ball");
+	c = canvas.getContext('2d');
 
+	var circle = {
+		x: 50,
+		y: 50,
+		radius: 20
+	};
 
-function executeFrame(){
-	y++;
+	function executeFrame(){
+		circle.y++;
 
-	c.beginPath();
-	c.arc(x, y, radius, 0, 2*Math.PI);
-	c.closePath();
-	c.fill();
+		c.clearRect(0, 0, canvas.width, canvas.height);
 
-	requestAnimationFrame(executeFrame);
-}
+		c.beginPath();
+		c.arc(circle.x, circle.y, circle.radius, 0, 2*Math.PI);
+		c.closePath();
+		c.fill();
 
-// Start animation
-executeFrame();
+		if(circle.y < canvas.height - circle.radius) {
+			requestAnimationFrame(executeFrame);
+		}
+	}
+
+	// Start animation
+	executeFrame();
+})();
